@@ -230,14 +230,21 @@ async function renderPlay(puzzleId) {
 
   let dragging = false, startCell = null, lastEnd = null, liveLine = null;
   function evtXY(e) { const t = e.touches && e.touches[0]; return t ? [t.clientX, t.clientY] : [e.clientX, e.clientY]; }
+  const samePt = (a, b) => !!a && !!b && a[0] === b[0] && a[1] === b[1];
+  // liveG holds ONLY the transient in-progress line (or a brief miss-bounce). Emptying it
+  // fully guarantees no stray/orphaned highlight is ever left behind (e.g. from a kid
+  // tapping or multi-touching). Found words live in lockedG and are never touched here.
+  function clearLive() { while (liveG.firstChild) liveG.removeChild(liveG.firstChild); liveLine = null; }
 
   function onDown(e) {
     if (completed || !started) return;
+    if (e.touches && e.touches.length > 1) return; // ignore extra fingers (kid mashing letters)
     const [x, y] = evtXY(e); const cell = cellFromPoint(x, y);
     if (!cell) return;
     e.preventDefault();
+    clearLive();                       // drop any leftover line before starting a new drag
     dragging = true; startCell = cell; lastEnd = cell;
-    liveLine = makeLine(cell, cell, '#2ec4b6', 'live'); liveG.appendChild(liveLine);
+    // No live line yet — it only appears once the drag forms a line of length >= 1.
   }
   function onMove(e) {
     if (!dragging) return;
@@ -245,15 +252,17 @@ async function renderPlay(puzzleId) {
     const [x, y] = evtXY(e); const cur = cellFromPoint(x, y) || lastEnd;
     const end = snap(startCell[0], startCell[1], cur[0], cur[1]);
     lastEnd = end;
+    if (samePt(end, startCell)) { clearLive(); return; } // still on the start cell: no highlight
     const [x2, y2] = center(end[0], end[1]);
-    liveLine.setAttribute('x2', x2); liveLine.setAttribute('y2', y2);
+    if (!liveLine) { liveLine = makeLine(startCell, end, '#2ec4b6', 'live'); liveG.appendChild(liveLine); }
+    else { liveLine.setAttribute('x2', x2); liveLine.setAttribute('y2', y2); }
   }
   async function onUp() {
     if (!dragging) return;
     dragging = false;
     const start = startCell, end = lastEnd;
-    if (liveLine) { liveLine.remove(); liveLine = null; }
-    if (!start || !end) return;
+    clearLive();                       // ALWAYS remove the live line on release
+    if (samePt(start, end)) return;    // pure tap / no real line: nothing selected, nothing to clear
     try {
       const r = await api('/api/wordsearch/' + puzzleId + '/find', {
         method: 'POST', body: JSON.stringify({ start, end, active_seconds: activeSeconds }),
@@ -267,10 +276,11 @@ async function renderPlay(puzzleId) {
         count.textContent = `${found.size}/${words.length}`;
         if (r.completed) finish(r);
       } else if (!r.hit) {
-        // miss: bounce a transient line then drop it
+        // miss: a brief bounce, then remove (also auto-cleared by the next clearLive)
         const ln = makeLine(start, end, '#ff6b5e', 'live bounce'); liveG.appendChild(ln);
-        setTimeout(() => ln.remove(), 340);
+        setTimeout(() => { if (ln.parentNode) ln.remove(); }, 340);
       }
+      // r.already (word already found): nothing to draw — it's already locked.
     } catch (_) {}
   }
   grid.addEventListener('mousedown', onDown);

@@ -113,6 +113,13 @@ its own copy of this section.
 - Between Bash calls the cwd can reset to `~/hansenhub`; run one-off `node` with absolute paths.
 
 ## Changelog
+- 2026-06-07 (fix): Cleared stray highlight from taps/incomplete drags. `onDown` created a
+  live line and only tracked the latest `liveLine` ref, so rapid taps / a 2nd finger left
+  orphaned teal lines stuck. Now `liveG` holds only the single in-progress line: `clearLive()`
+  empties it on down and on release; the live line is created only once a drag forms a line
+  of length ≥1 (a pure tap shows nothing); extra touch points are ignored. Found words
+  (lockedG) are never touched. Verified headless: 10 taps + 3 wiggles leave 0 stray lines,
+  correct drag still locks, only found words stay lit. Bumped sw → games-v3.
 - 2026-06-07 (content): Added two puzzles — `002-family-names` (Family Names, 15×15, 22
   words) and `003-places` (Places We've Been, 16×16, 15 words). Both pass
   `check-puzzles.js` on the first try (incl. WINDSORHEIGHTS, 14, in 16×16 — no size bump
