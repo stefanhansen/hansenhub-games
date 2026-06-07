@@ -113,6 +113,11 @@ its own copy of this section.
 - Between Bash calls the cwd can reset to `~/hansenhub`; run one-off `node` with absolute paths.
 
 ## Changelog
+- 2026-06-07 (fix): Leaderboard "you" highlight alignment. Replaced the `outline` +
+  `outline-offset` (drew outside the card, overlapped rounded corners, clipped at the right
+  edge) with an inset dashed `::after` ring (`inset:4px`, `border-radius:13px`) contained
+  inside the row, following its corners. Bumped sw → games-v4. (Identity audit confirmed
+  per-request via `req.who`/`hh_who` — no shared "current person" state, no change.)
 - 2026-06-07 (fix): Cleared stray highlight from taps/incomplete drags. `onDown` created a
   live line and only tracked the latest `liveLine` ref, so rapid taps / a 2nd finger left
   orphaned teal lines stuck. Now `liveG` holds only the single in-progress line: `clearLive()`

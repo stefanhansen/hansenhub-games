@@ -339,4 +339,11 @@ input:focus { outline: none; background: var(--white); box-shadow: var(--shadow-
 
 /* leaderboard reuse lb-* from base styles */
 .lb-time { font-family:"Baloo 2"; font-weight:800; font-size:1.2rem; white-space:nowrap; }
-.lb-row.you { outline: 4px dashed var(--ink); outline-offset: 3px; }
+/* "this is you" highlight: an inset dashed ring contained inside the row card,
+   following its rounded corners — fully visible, never clipped or overflowing. */
+.lb-row.you { position: relative; }
+.lb-row.you::after {
+  content: ""; position: absolute; inset: 4px;
+  border: 3px dashed var(--ink); border-radius: 13px;
+  pointer-events: none;
+}
