@@ -113,6 +113,10 @@ its own copy of this section.
 - Between Bash calls the cwd can reset to `~/hansenhub`; run one-off `node` with absolute paths.
 
 ## Changelog
+- 2026-06-07 (content): Added two puzzles — `002-family-names` (Family Names, 15×15, 22
+  words) and `003-places` (Places We've Been, 16×16, 15 words). Both pass
+  `check-puzzles.js` on the first try (incl. WINDSORHEIGHTS, 14, in 16×16 — no size bump
+  needed) and appear live on the list without a restart (dir is read per request).
 - 2026-06-07 (fix): Wordsearch grid geometry + selection accuracy. Root cause: the grid
   was square via `aspect-ratio` but only had explicit columns, so auto-height rows
   overflowed (bottom rows clipped) and the SVG overlay's even `viewBox` no longer lined up
