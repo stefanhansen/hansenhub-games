@@ -1,0 +1,12 @@
+{
+  "name": "hansenhub-games",
+  "version": "1.0.0",
+  "description": "HansenHub Games — wordsearch and more",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "check": "node scripts/check-puzzles.js" },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2"
+  }
+}

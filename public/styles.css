@@ -1,0 +1,339 @@
+:root {
+  --cream: #fff6e9;
+  --cream-deep: #ffeccb;
+  --coral: #ff6b5e;
+  --coral-deep: #e8503f;
+  --teal: #2ec4b6;
+  --teal-deep: #1ba294;
+  --gold: #ffc857;
+  --gold-deep: #f0ad26;
+  --ink: #34303a;
+  --ink-soft: #5b5560;
+  --white: #fffdf8;
+
+  --border: 4px;
+  --radius: 22px;
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-sm: 4px 4px 0 var(--ink);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "Nunito", system-ui, sans-serif;
+  font-weight: 700;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  /* dotted "sticker book" backdrop */
+  background-image: radial-gradient(var(--cream-deep) 18%, transparent 18%);
+  background-size: 26px 26px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+h1, h2, h3, .display {
+  font-family: "Baloo 2", "Nunito", sans-serif;
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 18px 16px calc(28px + env(safe-area-inset-bottom));
+  min-height: 100dvh;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.logo {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo .spark { font-size: 1.6rem; }
+.who {
+  font-size: 0.95rem;
+  background: var(--gold);
+  border: var(--border) solid var(--ink);
+  border-radius: 999px;
+  padding: 6px 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--white);
+  border: var(--border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  margin: 22px 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  background: var(--white);
+  border: var(--border) solid var(--ink);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  padding: 13px 18px;
+  cursor: pointer;
+  transition: transform .05s ease, box-shadow .05s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+.btn.coral { background: var(--coral); color: var(--white); }
+.btn.teal  { background: var(--teal);  color: var(--white); }
+.btn.gold  { background: var(--gold); }
+.btn.ghost { background: var(--cream); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-row { display: flex; gap: 10px; }
+.btn-row .btn { width: auto; flex: 1; }
+
+/* ---------- Profile picker ---------- */
+.profiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.profile {
+  border: var(--border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--white);
+  transition: transform .05s ease, box-shadow .05s ease;
+}
+.profile:active { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
+.profile.selected { outline: 4px dashed var(--ink); outline-offset: 4px; }
+.profile .avatar {
+  width: 64px; height: 64px; margin: 0 auto 8px;
+  border-radius: 50%;
+  border: var(--border) solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+}
+.profile .pname { font-family: "Baloo 2"; font-weight: 800; font-size: 1.15rem; }
+.profile .page  { color: var(--ink-soft); font-size: .9rem; }
+.av-coral { background: var(--coral); }
+.av-teal  { background: var(--teal); }
+.av-gold  { background: var(--gold); }
+
+/* ---------- Subjects ---------- */
+.subjects { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.subject {
+  border: var(--border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform .05s ease, box-shadow .05s ease;
+}
+.subject:active { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
+.subject.locked { cursor: default; opacity: .8; }
+.subject.locked:active { transform: none; box-shadow: var(--shadow-sm); }
+.subject .emoji { font-size: 2.4rem; display: block; margin-bottom: 6px; }
+.subject .label { font-family: "Baloo 2"; font-weight: 800; font-size: 1.15rem; }
+.subject.math { background: var(--coral); color: var(--white); }
+.subject.lang { background: var(--teal);  color: var(--white); }
+.subject.sci  { background: var(--gold); }
+.subject.art  { background: #c9a4ff; color: var(--white); }
+.subject .soon {
+  position: absolute; top: -10px; right: -8px;
+  background: var(--ink); color: var(--white);
+  font-size: .65rem; padding: 4px 8px; border-radius: 999px;
+  transform: rotate(8deg);
+}
+
+/* ---------- Forms ---------- */
+label { display: block; font-size: .9rem; margin: 10px 0 4px; }
+input[type="text"], input[type="number"], input[type="password"] {
+  width: 100%;
+  font-family: "Nunito"; font-weight: 700; font-size: 1.1rem;
+  padding: 12px 14px;
+  border: var(--border) solid var(--ink);
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--ink);
+}
+input:focus { outline: none; background: var(--white); box-shadow: var(--shadow-sm); }
+
+/* ---------- Quiz ---------- */
+.quiz-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.pill {
+  background: var(--gold); border: var(--border) solid var(--ink);
+  border-radius: 999px; padding: 4px 12px; font-size: .85rem;
+  box-shadow: var(--shadow-sm);
+}
+.progress-track {
+  height: 16px; background: var(--cream-deep);
+  border: var(--border) solid var(--ink); border-radius: 999px;
+  overflow: hidden; margin-bottom: 16px;
+}
+.progress-fill { height: 100%; background: var(--teal); width: 0; transition: width .3s ease; }
+.question {
+  font-family: "Baloo 2"; font-weight: 800;
+  font-size: 2.8rem; text-align: center; margin: 18px 0 22px;
+}
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.choice {
+  font-family: "Baloo 2"; font-weight: 800; font-size: 1.8rem;
+  padding: 22px 10px;
+  border: var(--border) solid var(--ink); border-radius: 18px;
+  box-shadow: var(--shadow-sm); background: var(--white);
+  cursor: pointer;
+  transition: transform .05s ease, box-shadow .05s ease;
+}
+.choice:active { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
+.choice.correct { background: var(--teal); color: var(--white); }
+.choice.wrong   { background: var(--coral); color: var(--white); }
+.choice.disabled { pointer-events: none; }
+
+/* ---------- Result ---------- */
+.result { text-align: center; }
+.result .big-stars { font-size: 3.4rem; margin: 6px 0; }
+.result h2 { font-size: 2rem; margin-bottom: 6px; }
+.result .tally { color: var(--ink-soft); margin-bottom: 16px; }
+
+/* ---------- Leaderboard ---------- */
+.lb-row {
+  display: flex; align-items: center; gap: 12px;
+  border: var(--border) solid var(--ink); border-radius: 18px;
+  box-shadow: var(--shadow-sm); padding: 12px 14px; margin-bottom: 12px;
+  background: var(--white);
+}
+.lb-rank { font-family: "Baloo 2"; font-weight: 800; font-size: 1.4rem; width: 34px; text-align: center; }
+.lb-av {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: var(--border) solid var(--ink);
+  display:flex; align-items:center; justify-content:center; font-size: 1.4rem;
+}
+.lb-main { flex: 1; }
+.lb-name { font-family: "Baloo 2"; font-weight: 800; font-size: 1.15rem; }
+.lb-sub { color: var(--ink-soft); font-size: .82rem; }
+.lb-stars { font-family: "Baloo 2"; font-weight: 800; font-size: 1.3rem; white-space: nowrap; }
+
+/* ---------- Login ---------- */
+.login-wrap {
+  min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.login-card { max-width: 380px; width: 100%; text-align: center; }
+.login-card .spark { font-size: 3rem; }
+.login-card h1 { font-size: 2.2rem; margin: 6px 0 2px; }
+.login-card p { color: var(--ink-soft); margin: 0 0 18px; }
+.err { color: var(--coral-deep); min-height: 1.2em; margin-top: 10px; font-size: .9rem; }
+
+/* ---------- Utility ---------- */
+.hidden { display: none !important; }
+.center { text-align: center; }
+.muted { color: var(--ink-soft); }
+.spacer { height: 8px; }
+.pop { animation: pop .25s ease; }
+@keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+/* ===================== Games-specific ===================== */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.tile {
+  border: var(--border) solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px 12px; text-align: center; cursor: pointer;
+  transition: transform .05s ease, box-shadow .05s ease; position: relative;
+}
+.tile:active { transform: translate(5px,5px); box-shadow: 0 0 0 var(--ink); }
+.tile.locked { opacity: .8; cursor: default; }
+.tile.locked:active { transform: none; box-shadow: var(--shadow); }
+.tile .temoji { font-size: 2.6rem; display: block; margin-bottom: 6px; }
+.tile .tname { font-family: "Baloo 2"; font-weight: 800; font-size: 1.15rem; }
+.tile.ws { background: var(--teal); color: var(--white); }
+.tile .soon {
+  position: absolute; top: -10px; right: -8px; background: var(--ink); color: var(--white);
+  font-size: .62rem; padding: 4px 8px; border-radius: 999px; transform: rotate(8deg);
+}
+
+/* puzzle list cards */
+.pz { display:flex; align-items:center; gap:12px;
+  border: var(--border) solid var(--ink); border-radius: 18px; box-shadow: var(--shadow-sm);
+  background: var(--white); padding: 14px; margin-bottom: 12px; cursor: pointer;
+  transition: transform .05s ease, box-shadow .05s ease; }
+.pz:active { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
+.pz .pz-ic { font-size: 1.8rem; }
+.pz .pz-main { flex:1; }
+.pz .pz-title { font-family:"Baloo 2"; font-weight:800; font-size:1.1rem; }
+.pz .pz-sub { color: var(--ink-soft); font-size:.85rem; }
+.pz .pz-badge { font-family:"Baloo 2"; font-weight:800; font-size:.9rem;
+  padding:6px 10px; border-radius:999px; border:3px solid var(--ink); white-space:nowrap; }
+.pz .pz-badge.done { background: var(--teal); color: var(--white); }
+.pz .pz-badge.prog { background: var(--gold); }
+.pz .pz-badge.new  { background: var(--cream-deep); }
+
+/* play screen */
+.play-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; }
+.timer { font-family:"Baloo 2"; font-weight:800; }
+.ws-wrap { position: relative; width: 100%; margin: 4px auto 14px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.ws-grid { display: grid; width: 100%; aspect-ratio: 1 / 1; gap: 0;
+  border: var(--border) solid var(--ink); border-radius: 16px; overflow: hidden; background: var(--white); }
+.ws-cell { display:flex; align-items:center; justify-content:center;
+  font-family:"Baloo 2"; font-weight:700; color: var(--ink);
+  font-size: clamp(13px, 4.6vw, 26px); }
+.ws-svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.ws-line { stroke-linecap: round; fill: none; }
+.ws-line.live { opacity: .34; }
+.ws-line.locked { opacity: .32; }
+.ws-line.pop { animation: wspop .32s cubic-bezier(.34,1.56,.64,1); }
+.ws-line.bounce { animation: wsbounce .32s ease; }
+@keyframes wspop { 0%{ stroke-width: 0.2; opacity:.0 } 60%{ opacity:.45 } 100%{ opacity:.32 } }
+@keyframes wsbounce { 0%,100%{ transform: translateX(0) } 20%{ transform: translateX(-3px) } 40%{ transform: translateX(3px) } 60%{ transform: translateX(-2px) } 80%{ transform: translateX(2px) } }
+
+/* word chips */
+.words { display:flex; flex-wrap:wrap; gap:8px; }
+.wchip { display:flex; align-items:center; gap:6px;
+  border:3px solid var(--ink); border-radius:999px; padding:6px 12px;
+  background: var(--white); font-weight:800; font-size:.95rem; }
+.wchip .dot { width:13px; height:13px; border-radius:50%; border:2px solid var(--ink); background: var(--cream-deep); }
+.wchip.found { opacity:.5; text-decoration: line-through; }
+
+/* overlays (intro + completion) */
+.overlay { position: fixed; inset:0; background: rgba(52,48,58,.5);
+  display:flex; align-items:center; justify-content:center; z-index:60; padding:20px; animation: fade .15s ease; }
+.overlay .card { max-width: 420px; width:100%; text-align:center; margin:0; }
+.overlay .big { font-size: 3rem; margin-bottom: 4px; }
+.overlay h2 { font-size: 2rem; margin-bottom: 6px; }
+.confetti-canvas { position: fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:55; }
+
+/* leaderboard reuse lb-* from base styles */
+.lb-time { font-family:"Baloo 2"; font-weight:800; font-size:1.2rem; white-space:nowrap; }
+.lb-row.you { outline: 4px dashed var(--ink); outline-offset: 3px; }

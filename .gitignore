@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# SQLite database (runtime data — never commit)
+data/
+*.db
+*.db-wal
+*.db-shm
+
+# Local env / secrets (real secrets live in /etc/hansenhub.env, outside the repo)
+.env
+.env.*
+*.local.env
+
+# Local Claude Code settings (machine-specific; may embed commands/secrets)
+.claude/
+
+# OS / editor cruft
+.DS_Store
+*.log
