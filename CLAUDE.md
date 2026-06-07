@@ -77,6 +77,35 @@ errors loudly.
 - Bump `sw.js` `CACHE` after changing app.js/styles.css.
 - `express.json({type:['application/json','text/plain']})` so `sendBeacon` bodies parse.
 
+## Platform status (2026-06-07) — read this first if picking up cold
+Applies to all 3 services (hub `~/hub`, learn `~/hansenhub`, games `~/games`); each has
+its own copy of this section.
+
+**Done & live** (HTTPS, systemd-enabled, Caddy):
+- hub → hansenhub.net:3010 (login, people picker w/ editable emoji+name, app chooser).
+- learn → learn.hansenhub.net:3000 (math + stars; refactored onto shared auth).
+- games → games.hansenhub.net:3020 (deterministic wordsearch, drag-select, time board; puzzle `001-family`).
+- Shared login/identity working across all three (one passcode `220585`, cookies `hh_auth`+`hh_who` on `.hansenhub.net`, secrets in `/etc/hansenhub.env`). Verified end-to-end.
+- All DBs pristine (0 scores/progress). Learn DB backed up at `~/hansenhub/data/backups/` before its schema migration.
+- learn pushed to GitHub (`stefanhansen/hansenhub`); hub + games committed to **local** git only.
+
+**Left / pending:**
+- Host hub + games on GitHub: create private repos `hansenhub-hub` + `hansenhub-games`, add the per-repo deploy keys (aliases `github-hub`/`github-games` + remotes already set on `~/hub` and `~/games`), then `git push -u origin main` from each. Public keys: `~/.ssh/hub_deploy.pub`, `~/.ssh/games_deploy.pub`.
+- Content gaps by design: learn has only Math live (Language/Science/Arts are "coming soon"); games has only Word Search. Both are additive (`SUBJECTS` / `GAMES` arrays; puzzles = drop JSON in `~/games/puzzles/`).
+
+**Key decisions:**
+- Separate DBs + separate leaderboards (learn=stars, games=time) per the brief's "Supersedes" (overrides any earlier unified-DB plan). Apps share only login + identity, never data; they never call the hub at runtime (they read the signed cookie + a local `people` cache).
+- Generated a NEW shared `SESSION_SECRET` (never read the old learn secret) → invalidated old `lq_auth` cookies; one-time re-login at the hub is expected.
+- Person ids: 1 Sol, 2 Ida, 3 Julia, 4 Stefan. (Differs from learn's original profiles order Ida=1/Sol=2 — mattered for migration, but 0 score rows existed.)
+- `auth.js` is **copied** into all 3 services (kept identical); if you change it, change all three.
+
+**Gotchas:**
+- Secrets live only in `/etc/hansenhub.env` (+ `/etc/learning-quest.env` for learn's PORT). Never read/print/commit them; auto-mode denies reading `/etc/**`, so append to the Caddyfile with `sudo tee -a` (don't try to read it).
+- Each service's `data/` dir must exist before its systemd unit starts (`ReadWritePaths`).
+- Bump `sw.js` `CACHE` after frontend changes (learn `lq-v2`, hub `hub-v1`, games `games-v1`).
+- **Don't use broad `pkill` patterns:** `pkill -f "hub/server.js"` also matches `hansen`**`hub/server.js`** and killed live Learn once. Use full paths or PIDs.
+- Between Bash calls the cwd can reset to `~/hansenhub`; run one-off `node` with absolute paths.
+
 ## Changelog
 - 2026-06-07: Initial games service — deterministic wordsearch engine, drag-to-select
   play, visibility-aware timer, per-puzzle time leaderboard, first puzzle 001-family.
