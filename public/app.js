@@ -117,23 +117,31 @@ async function renderPlay(puzzleId) {
       <span class="pill" id="count">${found.size}/${words.length}</span>
     </div>
     <div class="ws-wrap" id="wrap">
-      <div class="ws-grid" id="grid"></div>
-      <svg class="ws-svg" id="svg" viewBox="0 0 ${size} ${size}" preserveAspectRatio="none">
-        <g id="locked"></g><g id="livewrap"></g>
-      </svg>
+      <div class="ws-grid" id="grid">
+        <svg class="ws-svg" id="svg" viewBox="0 0 ${size} ${size}" preserveAspectRatio="none">
+          <g id="locked"></g><g id="livewrap"></g>
+        </svg>
+      </div>
     </div>
     <div class="words" id="words"></div>
   </div>`);
   view.appendChild(card);
   $('#back', card).onclick = () => go(renderPuzzleList);
 
-  // grid cells
+  // grid cells — explicit equal rows AND columns so the box is fully filled, square,
+  // and the cell layout matches the SVG viewBox exactly (no clipping, accurate hits).
   const grid = $('#grid', card);
   grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
   for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) {
     const cell = el(`<div class="ws-cell" data-r="${r}" data-c="${c}">${data.grid[r][c]}</div>`);
     grid.appendChild(cell);
   }
+  // size the letters to the actual cell width, and keep them right on resize/rotate
+  let ro = null;
+  function fitFont() { const w = grid.clientWidth; if (w) grid.style.fontSize = Math.max(10, Math.floor(w / size * 0.58)) + 'px'; }
+  fitFont();
+  if (window.ResizeObserver) { ro = new ResizeObserver(fitFont); ro.observe(grid); }
   const svg = $('#svg', card), lockedG = $('#locked', card), liveG = $('#livewrap', card);
   const SVGNS = 'http://www.w3.org/2000/svg';
   const center = (r, c) => [c + 0.5, r + 0.5];
@@ -193,6 +201,7 @@ async function renderPlay(puzzleId) {
   // teardown for navigation
   teardown = () => {
     stopTimers(); pushTime(true);
+    if (ro) ro.disconnect();
     document.removeEventListener('visibilitychange', onVis);
     window.removeEventListener('pagehide', onHide);
     window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp);

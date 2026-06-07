@@ -59,9 +59,15 @@ redirects to the hub picker. The gate upserts the verified `hh_who` into the loc
 ## Frontend (`public/app.js`)
 Vanilla JS, `el()`/`go()` router with a `teardown` for the play screen. Screens: landing
 (`GAMES` array, additive), puzzle list (status badges), play, leaderboard.
-Play: CSS-grid letter cells + absolute SVG overlay (`viewBox 0 0 size size`,
-`preserveAspectRatio=none`); drag via `elementFromPoint` hit-test; `snap()` locks to the
-nearest of 8 directions; correct→`pop`+locked colored line+strike chip, miss→`bounce`.
+Play: CSS-grid letter cells + SVG overlay. **Grid geometry (critical for hit-testing):**
+the grid sets BOTH `grid-template-columns` and `grid-template-rows` to `repeat(N,1fr)` on
+an `aspect-ratio:1/1` box (cells `min-width/height:0; overflow:hidden`), so all N rows fill
+the box square with no clipping. The `<svg>` overlay (`viewBox 0 0 N N`,
+`preserveAspectRatio=none`) is a **child of the grid** so it shares the exact content-box
+coordinate space the cells occupy (inside the 4px border) — cell center `(c+0.5,r+0.5)`
+maps precisely onto the DOM cell. Letters are sized to the measured cell width via a
+`ResizeObserver` (disconnected in teardown). Drag via `elementFromPoint` hit-test; `snap()`
+locks to the nearest of 8 directions; correct→`pop`+locked colored line+strike chip, miss→`bounce`.
 Timer ticks only while `visibilityState==='visible'`; syncs every 15s and on
 visibilitychange/pagehide via `sendBeacon`. Completion → hero card + canvas confetti
 (respects reduced-motion). Resume redraws saved lines and skips the intro if started.
@@ -107,6 +113,14 @@ its own copy of this section.
 - Between Bash calls the cwd can reset to `~/hansenhub`; run one-off `node` with absolute paths.
 
 ## Changelog
+- 2026-06-07 (fix): Wordsearch grid geometry + selection accuracy. Root cause: the grid
+  was square via `aspect-ratio` but only had explicit columns, so auto-height rows
+  overflowed (bottom rows clipped) and the SVG overlay's even `viewBox` no longer lined up
+  with the taller cell layout, so `elementFromPoint` mapped touches to the wrong cells.
+  Fix: explicit equal rows+cols filling the box, and moved the SVG inside the grid so it
+  shares the cells' content-box coords. Verified in headless Chromium at 800px: 225/225
+  cells hit-test correct (incl. after scroll), no clipping, all 15 words selectable incl.
+  a reverse drag. Validator (forward/reversed, 8 directions) unchanged. Bumped sw → games-v2.
 - 2026-06-07: Initial games service — deterministic wordsearch engine, drag-to-select
   play, visibility-aware timer, per-puzzle time leaderboard, first puzzle 001-family.
   systemd `games`, Caddy games.hansenhub.net → 3020.

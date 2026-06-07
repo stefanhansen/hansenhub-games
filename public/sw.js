@@ -1,7 +1,7 @@
 /* Minimal service worker — makes the app installable and gives a fast,
    offline-friendly shell. Network-first for navigations & API so kids always
    get fresh content and scores when online. */
-const CACHE = 'games-v1';
+const CACHE = 'games-v2';
 const SHELL = ['/', '/index.html', '/styles.css', '/app.js', '/manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {

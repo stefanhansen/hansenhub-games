@@ -304,11 +304,14 @@ input:focus { outline: none; background: var(--white); box-shadow: var(--shadow-
 .play-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; }
 .timer { font-family:"Baloo 2"; font-weight:800; }
 .ws-wrap { position: relative; width: 100%; margin: 4px auto 14px; touch-action: none; user-select: none; -webkit-user-select: none; }
-.ws-grid { display: grid; width: 100%; aspect-ratio: 1 / 1; gap: 0;
-  border: var(--border) solid var(--ink); border-radius: 16px; overflow: hidden; background: var(--white); }
+/* Square box. Explicit equal rows AND columns so all N rows fill the box with no
+   clipping and every cell stays square. The SVG overlay is a child of the grid, so
+   it shares the exact content-box coordinate space the cells live in. */
+.ws-grid { position: relative; display: grid; width: 100%; aspect-ratio: 1 / 1; gap: 0;
+  border: var(--border) solid var(--ink); border-radius: 16px; overflow: hidden;
+  background: var(--white); font-family: "Baloo 2"; font-weight: 700; font-size: 20px; }
 .ws-cell { display:flex; align-items:center; justify-content:center;
-  font-family:"Baloo 2"; font-weight:700; color: var(--ink);
-  font-size: clamp(13px, 4.6vw, 26px); }
+  min-width: 0; min-height: 0; overflow: hidden; line-height: 1; color: var(--ink); }
 .ws-svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
 .ws-line { stroke-linecap: round; fill: none; }
 .ws-line.live { opacity: .34; }
